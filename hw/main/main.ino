@@ -9,6 +9,9 @@
   https://github.com/mobizt/Firebase-ESP-Client/blob/main/examples/RTDB/Basic/Basic.ino
 */
 
+
+
+
 // Insert your network credentials
 #define WIFI_SSID "ICST"
 #define WIFI_PASSWORD "arduino123"
@@ -24,31 +27,9 @@ bool signupOK = false;
 
 void setup(){
   _DB.connectToWifi("ICST", "arduino123");
+  _DB.addNewUser(1,2);
 }
 
 void loop(){
-    if (Firebase.ready()&& (millis() - sendDataPrevMillis > 15000 || sendDataPrevMillis == 0)){
-    if(WiFi.status() == WL_CONNECTED && Firebase.ready()){
-      String documentPath = "House/Room_1";
-
-      FirebaseJson content;
-
-      content.set("fields/temperature/doubleValue", String(3).c_str());
-      content.set("fields/humidity/doubleValue", String(2).c_str());
-
-      if(Firebase.Firestore.patchDocument(&_DB.fbdo, FIREBASE_PROJECT_ID, "", documentPath.c_str(), content.raw(), "temperature,humidity")){
-        Serial.printf("ok\n%s\n\n", _DB.fbdo.payload().c_str());
-        return;
-      }else{
-        Serial.println(_DB.fbdo.errorReason());
-      }
-
-      if(Firebase.Firestore.createDocument(&_DB.fbdo, FIREBASE_PROJECT_ID, "", documentPath.c_str(), content.raw())){
-        Serial.printf("ok\n%s\n\n", _DB.fbdo.payload().c_str());
-        return;
-      }else{
-        Serial.println(_DB.fbdo.errorReason());
-      }
-    }
-  }
+  
 }
