@@ -17,8 +17,6 @@
 //Provide the RTDB payload printing info and other helper functions.
 #include "addons/RTDBHelper.h"
 
-#include "C:\Users\user\OneDrive\Desktop\SmartLendPegBoard\hw\db.hpp"
-
 #include <MFRC522.h> //library responsible for communicating with the module RFID-RC522
 //#include <SPI.h> //library responsible for communicating of SPI bus
 //used in authentication
@@ -43,13 +41,18 @@ bool start;
 // #define USER_PASSWORD "sadProject!"
 // #define FIREBASE_PROJECT_ID "smartlend-drawers"
 
+class rfid{
+  public:
+  void setup();
 
-void setup(){
+};
+
+void rfid::setup(){
   ///////////// RFID setup //////////////////////////
   Serial.begin(115200);
   SPI.begin(); // Init SPI bus
-  pinMode(greenPin, OUTPUT);
-  pinMode(redPin, OUTPUT);
+  //pinMode(greenPin, OUTPUT);
+  //pinMode(redPin, OUTPUT);
   
   // Init MFRC522
   mfrc522.PCD_Init(); 
@@ -71,24 +74,24 @@ void setup(){
    }
   }else if(!start){ Serial.printf("readCard error");delay(1000);}
    if(!start) return;
-   }
+  }
   
 
-  void loop() {
+  // void loop() {
   
-    if(digitalRead(3)==LOW){
-        start = false;
-        first = true;
-        digitalWrite(redPin,LOW);
-    }
-    if(first){
-        //////////////////////////////read rfid id///////////////////////////////////
-        Serial.printf("rfid read: \n");
-        workerId=readingData();
-        Serial.printf(workerId.c_str());
-        /////////////////////////////////////////////////////////////////////////////
+  //   if(digitalRead(3)==LOW){
+  //       start = false;
+  //       first = true;
+  //       digitalWrite(redPin,LOW);
+  //   }
+  //   if(first){
+  //       //////////////////////////////read rfid id///////////////////////////////////
+  //       Serial.printf("rfid read: \n");
+  //       workerId=readingData();
+  //       Serial.printf(workerId.c_str());
+  //       /////////////////////////////////////////////////////////////////////////////
         
-        first = false;
-        digitalWrite(redPin,HIGH);
-       }
-     }  
+  //       first = false;
+  //       digitalWrite(redPin,HIGH);
+  //      }
+  //    }  

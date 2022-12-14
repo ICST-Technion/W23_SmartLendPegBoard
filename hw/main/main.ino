@@ -17,10 +17,12 @@
 #define WIFI_PASSWORD "arduino123"
 
 #include "C:\Project_iot\SmartLendPegBoard\hw\db.hpp"
+#include "C:\Project_iot\SmartLendPegBoard\hw\rfid.hpp"
 #include "C:\Project_iot\SmartLendPegBoard\hw\time.hpp"
 
 
 db _DB;
+rfid _rfd;
 
 unsigned long sendDataPrevMillis = 0;
 int count = 0;
@@ -28,11 +30,8 @@ bool signupOK = false;
 
 void setup(){
   _DB.connectToWifi("ICST", "arduino123");
-  _DB.addNewUser(2,3);
-  _DB.getUserLentItems(1);
-  _DB.lendItem(1, 4);
-  _DB.returnItem(1, 4);
-  _DB.addToLog(1, 2, LENT, "00:11:22");
+  _rfd.setup();
+
 
 
 }
