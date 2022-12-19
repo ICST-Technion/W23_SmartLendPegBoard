@@ -29,25 +29,15 @@ MFRC522::StatusCode status;
 MFRC522 mfrc522(SS_PIN, RST_PIN); 
 bool start;
 
-
-// // Insert Firebase project API Key
-// #define API_KEY "AIzaSyBZVl5UmOnKJhjq-sCDZ9Vv70ZvF6dZ39c"
-
-// // Insert RTDB URLefine the RTDB URL */
-// #define DATABASE_URL "/" 
-
-// //insert project email and id
-// #define USER_EMAIL "smartlend.236333@gmail.com"
-// #define USER_PASSWORD "sadProject!"
-// #define FIREBASE_PROJECT_ID "smartlend-drawers"
-
 class rfid{
   public:
-  void setup();
+  void init();
+  void readCard();
+  string readingData();
 
 };
 
-void rfid::setup(){
+void rfid::init(){
   ///////////// RFID setup //////////////////////////
   Serial.begin(115200);
   SPI.begin(); // Init SPI bus
@@ -64,34 +54,95 @@ void rfid::setup(){
   {   
     start = true;
     if ( ! mfrc522.PICC_ReadCardSerial()) 
-  {
+     {
     //should add this new user 
-    Serial.printf("enter your ID to get approved");
-  }else {
+    Serial.printf("WE CAN READ CARD YAY \n");
+    }else {
     //user allready have permission , should track after items.
-    Serial.printf(" I have permission!");
-
+    Serial.printf(" OH NO!, can't read card! \n");
    }
   }else if(!start){ Serial.printf("readCard error");delay(1000);}
    if(!start) return;
-  }
+}
   
 
-  // void loop() {
+// void rfid::readCard() {
+//   if(digitalRead(3)==LOW){
+//       start = false;
+//       first = true;
+//       digitalWrite(redPin,LOW);
+//   }
+//   ///////////////////// RFID reed //////////////////////////
+//   if (mfrc522.PICC_IsNewCardPresent() && !start ) 
+//   {   
+//     start = true;
+//     if ( ! mfrc522.PICC_ReadCardSerial()) 
+//   {
+//     Serial.printf("readCard error1");
+//   }else { }
+//   }else if(!start){ Serial.printf("readCard error2");
+//     delay(1000);}
+//   if(!start) return;
   
-  //   if(digitalRead(3)==LOW){
-  //       start = false;
-  //       first = true;
-  //       digitalWrite(redPin,LOW);
-  //   }
-  //   if(first){
-  //       //////////////////////////////read rfid id///////////////////////////////////
-  //       Serial.printf("rfid read: \n");
-  //       workerId=readingData();
-  //       Serial.printf(workerId.c_str());
-  //       /////////////////////////////////////////////////////////////////////////////
-        
-  //       first = false;
-  //       digitalWrite(redPin,HIGH);
-  //      }
-  //    }  
+//   if(first){
+//     //////////////////////////////read rfid id///////////////////////////////////
+//     Serial.printf("rfid read: \n");
+//     workerId=readingData();
+//     Serial.printf(workerId.c_str());
+//   }  
+// }
+
+//   string rfid::readingData(){
+//   //prints the technical details of the card/tag
+//   mfrc522.PICC_DumpDetailsToSerial(&(mfrc522.uid)); 
+  
+//   //prepare the key - all keys are set to FFFFFFFFFFFFh
+//   for (byte i = 0; i < 6; i++) key.keyByte[i] = 0xFF;
+  
+//   //buffer for read data
+//   byte buffer[SIZE_BUFFER] = {0};
+ 
+//   //the block to operate
+//   byte block = 1;
+//   byte size = SIZE_BUFFER;//</p><p>  //authenticates the block to operate
+//   status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid)); //line 834 of MFRC522.cpp file
+//   if (status != MFRC522::STATUS_OK) {
+//     Serial.print(F("Authentication failed: "));
+//     Serial.println(mfrc522.GetStatusCodeName(status));
+// //    digitalWrite(redPin, HIGH);
+// //    delay(1000);
+// //    digitalWrite(redPin, LOW);
+//     return "";
+//   }
+
+//   //read data from block
+//   status = mfrc522.MIFARE_Read(block, buffer, &size);
+//   if (status != MFRC522::STATUS_OK) {
+//     Serial.print(F("Reading failed: "));
+//     Serial.println(mfrc522.GetStatusCodeName(status));
+// //    digitalWrite(redPin, HIGH);
+// //    delay(1000);
+// //    digitalWrite(redPin, LOW);
+//     return "";
+//   }
+//   else{
+// //      digitalWrite(greenPin, HIGH);
+// //      delay(1000);
+// //      digitalWrite(greenPin, LOW);
+//   }
+
+// //  Serial.print(F("\nData from block ["));
+// //  Serial.print(block);Serial.print(F("]: "));
+
+//  //prints read data
+//   for (uint8_t i = 0; i < MAX_SIZE_BLOCK; i++)
+//   {
+// //      Serial.write(buffer[i]);
+//   }
+// //  Serial.println(" ");
+
+//   string temp=string((char*)buffer+1);
+//   temp.remove(4);
+//   return temp;
+// }
+

@@ -13,12 +13,12 @@
 
 
 // Insert your network credentials
-#define WIFI_SSID "ICST"
-#define WIFI_PASSWORD "arduino123"
+#define WIFI_SSID "TechPublic"
+#define WIFI_PASSWORD ""
 
-#include "C:\Project_iot\SmartLendPegBoard\hw\db.hpp"
-#include "C:\Project_iot\SmartLendPegBoard\hw\rfid.hpp"
-#include "C:\Project_iot\SmartLendPegBoard\hw\time.hpp"
+#include "C:\Users\adam1\SmartLendPegBoard\hw\db.hpp"
+#include "C:\Users\adam1\SmartLendPegBoard\hw\rfid.hpp"
+#include "C:\Users\adam1\SmartLendPegBoard\hw\time.hpp"
 
 
 db _DB;
@@ -30,12 +30,12 @@ bool signupOK = false;
 
 void setup(){
   _DB.connectToWifi("ICST", "arduino123");
-  _rfd.setup();
+  _rfd.init();
 
 
 
 }
 
 void loop(){
-  
+ // _rfd.readCard();
 }
