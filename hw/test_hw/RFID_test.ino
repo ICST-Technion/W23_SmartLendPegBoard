@@ -12,7 +12,7 @@ MFRC522::MIFARE_Key key;
 MFRC522 rfid = MFRC522(SS_PIN, RST_PIN);
 void setup() {
   //Init Serial USB
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.println(F("Initialize System"));
   //init rfid D8,D5,D6,D7
   SPI.begin();

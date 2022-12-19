@@ -43,7 +43,7 @@ int count = 0;
 bool signupOK = false;
 
 void setup(){
-  Serial.begin(115200);
+  Serial.begin(9600);
  // WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     delay(250);
     WiFi.mode(WIFI_STA);

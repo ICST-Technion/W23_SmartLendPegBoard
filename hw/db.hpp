@@ -72,7 +72,7 @@ int stringToNum(string str) {
 
 bool db::connectToWifi(std::string Wifi_ssid, std::string wifi_password){
         Serial.println("Got to this stage");
-        Serial.begin(115200);
+        Serial.begin(9600);
         WiFi.begin(Wifi_ssid.c_str(), wifi_password.c_str());
         delay(250);
         Serial.print("Connecting to Wi-Fi");

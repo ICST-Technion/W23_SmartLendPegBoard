@@ -37,5 +37,5 @@ void setup(){
 }
 
 void loop(){
- // _rfd.readCard();
+  _rfd.readCard();
 }
