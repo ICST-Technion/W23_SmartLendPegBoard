@@ -41,19 +41,20 @@ class db{
     FirebaseAuth auth;
     FirebaseConfig config;
     bool connectToWifi(std::string Wifi_ssid, std::string wifi_password);
-    bool addNewUser(int cid, int uid);
+    bool addNewUser(string cid, int uid);
     std::string getFieldByPayload(std::string payload, std::string fieldType, std::string fieldName);
     std::string getField(std::string documentPath, std::string fieldType, std::string fieldName);
     void addField(FirebaseJson *content, string fieldName, string fieldType, string fieldValue);
     void updateDocumentField(string documentPath, string fieldName, string fieldType, string newData);
-    vector<bool> getUserLentItems(int cid); //return the id of the item.
-    bool readItem(int cid, int item_idx);
-    void returnItem(int cid, int item_idx);
-    void lendItem(int cid, int item_idx);
-    int  getUidByCid(int cid);
-    void addToLog(int cid, int item_idx, string action, string time_stamp);
-    bool isUserApproved(int cid);
-    bool isNewUser(int cid);
+    vector<bool> getUserLentItems(string cid); //return the id of the item.
+    bool readItem(string cid, int item_idx);
+    void returnItem(string cid, int item_idx);
+    void lendItem(string cid, int item_idx);
+    int  getUidByCid(string cid);
+    void addToLog(string cid, int item_idx, string action, string time_stamp);
+    bool isUserApproved(string cid);
+    bool isNewUser(string cid);
+    string parseCid(string cid);
 };
 
 int stringToNum(string str) {
@@ -103,9 +104,11 @@ bool db::connectToWifi(std::string Wifi_ssid, std::string wifi_password){
     }
 
 
-bool db::addNewUser(int cid, int uid){
+bool db::addNewUser(string cid, int uid){
     if(WiFi.status() == WL_CONNECTED && Firebase.ready()){
-      std::string documentPath = "USERS/" + std::to_string(cid);
+
+      cid = parseCid(cid);
+      std::string documentPath = "USERS/" + cid;
 
       FirebaseJson content;
 
@@ -161,8 +164,8 @@ std::string db::getFieldByPayload(std::string payload, std::string fieldType, st
   return content.to<std::string>().c_str();
 }
 
-vector<bool> db::getUserLentItems(int cid){
-
+vector<bool> db::getUserLentItems(string cid){
+  cid = parseCid(cid);
   vector<bool> lent_items(ITEMS_CNT, false);
   for (size_t i = 0; i < ITEMS_CNT; i++)
   {
@@ -171,8 +174,9 @@ vector<bool> db::getUserLentItems(int cid){
   return lent_items;
 }
 
-bool db::readItem(int cid, int item_idx){
-  std::string documentPath = "USERS/" + to_string(cid) + "/" ;
+bool db::readItem(string cid, int item_idx){
+  cid = parseCid(cid);
+  std::string documentPath = "USERS/" + cid + "/" ;
   std::string field_name = "item" + std::to_string(item_idx);
   std::string payload =  getField(documentPath, "boolean", field_name);
   bool return_val = (payload == "true") ? true : false;
@@ -198,61 +202,62 @@ void db::addField(FirebaseJson *content, string fieldName, string fieldType, str
   content->set(field_path.c_str(), fieldValue.c_str());
 }
 
-void db::returnItem(int cid, int item_idx){
-  
+void db::returnItem(string cid, int item_idx){
+  cid = parseCid(cid);
   bool is_returned = !readItem(cid, item_idx);
   if(is_returned){
     Serial.println("item already returned! \n");
     return;
   }
-  string doc_path = "USERS/" + to_string(cid) + "/" ;
+  string doc_path = "USERS/" +cid + "/" ;
   updateDocumentField(doc_path, ("item" + to_string(item_idx)), "boolean", "false");
   addToLog(cid, item_idx, RETURNED, "time_stamp");
   //TODO: add timestamp
   //TODO: update the items collection when you do it.
 }
 
-bool db::isUserApproved(int cid){
-
-  std::string documentPath = "USERS/" + to_string(cid) + "/" ;
+bool db::isUserApproved(string cid){
+  cid = parseCid(cid);
+  std::string documentPath = "USERS/" + cid + "/" ;
   std::string field_name = "Approved";
   std::string payload =  getField(documentPath, "boolean", field_name);
   return (payload == "true") ? true : false;
 }
 
-void db::lendItem(int cid, int item_idx){
+void db::lendItem(string cid, int item_idx){
 
+  cid = parseCid(cid);
   bool is_lent = readItem(cid, item_idx);
     if(is_lent){
     Serial.println("item already lent! \n");
     return;
   }
-  string doc_path = "USERS/" + to_string(cid) + "/" ;
+  string doc_path = "USERS/" + cid + "/" ;
   updateDocumentField(doc_path, ("item" + to_string(item_idx)), "boolean", "true");
   addToLog(cid, item_idx, LENT, "time_stamp");
   //TODO: add timestamp
   //TODO: update the items collection when you do it.
 }
 
-int db::getUidByCid(int cid){
-
-  std::string documentPath = "USERS/" + to_string(cid) + "/" ;
+int db::getUidByCid(string cid){
+  cid = parseCid(cid);
+  std::string documentPath = "USERS/" + cid + "/" ;
   std::string field_name ="UID";
   std::string payload =  getField(documentPath, "double", field_name);
   return stringToNum(payload);
 }
 
-bool db::isNewUser(int cid){
-
-  string documentPath = "USERS/" + to_string(cid);
+bool db::isNewUser(string cid){
+  cid = parseCid(cid);
+  string documentPath = "USERS/" + cid;
   if (Firebase.Firestore.getDocument(&fbdo, FIREBASE_PROJECT_ID, "", documentPath.c_str())){
       return false;
     }
   return true;
 }
 
-void db::addToLog(int cid, int item_idx, string action, string time_stamp){ 
-  
+void db::addToLog(string cid, int item_idx, string action, string time_stamp){ 
+  cid = parseCid(cid);
   int uid = getUidByCid(cid);
   if(WiFi.status() == WL_CONNECTED && Firebase.ready()){
       std::string documentPath = "LOG/";
@@ -261,7 +266,7 @@ void db::addToLog(int cid, int item_idx, string action, string time_stamp){
       FirebaseJson content;
 
       content.set("fields/UID/doubleValue", std::to_string(uid).c_str());
-      content.set("fields/CID/doubleValue", std::to_string(cid).c_str());
+      content.set("fields/CID/stringValue", cid.c_str());
       //content.set("fields/time/timestampValue", time_stamp.c_str());
       content.set("fields/action/stringValue", action.c_str());      
       content.set("fields/item_idx/doubleValue", to_string(item_idx).c_str());
@@ -272,6 +277,11 @@ void db::addToLog(int cid, int item_idx, string action, string time_stamp){
   }
 }
 
+
+string db::parseCid(string cid){
+  cid.erase(std::remove_if(cid.begin(), cid.end(), ::isspace), cid.end());
+  return cid;
+}
 
 
 

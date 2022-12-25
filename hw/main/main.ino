@@ -16,9 +16,9 @@
 #define WIFI_SSID "TechPublic"
 #define WIFI_PASSWORD ""
 
-#include "C:\Users\adam1\SmartLendPegBoard\hw\db.hpp"
-#include "C:\Users\adam1\SmartLendPegBoard\hw\rfid.hpp"
-#include "C:\Users\adam1\SmartLendPegBoard\hw\time.hpp"
+#include "C:\Project_iot\SmartLendPegBoard\hw\db.hpp"
+#include "C:\Project_iot\SmartLendPegBoard\hw\rfid.hpp"
+#include "C:\Project_iot\SmartLendPegBoard\hw\time.hpp"
 
 
 db _DB;
@@ -37,5 +37,15 @@ void setup(){
 }
 
 void loop(){
-  _rfd.readCard();
+  string cid = _rfd.readCid();
+  Serial.println(cid.c_str());
+  if(cid != "error"){
+    if(_DB.isNewUser(cid)){
+      _DB.addNewUser(cid, 2121);
+      Serial.println("added new user \n");
+    }else{
+      Serial.println("user already exists.\n");
+    }
+  }
+
 }
