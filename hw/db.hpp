@@ -137,6 +137,7 @@ bool db::addNewUser(string cid, int uid){
       }
     return false;
     }
+    return true;
 }
 
 std::string db::getField(std::string documentPath, std::string fieldType, std::string fieldName)

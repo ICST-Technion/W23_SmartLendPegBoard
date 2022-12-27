@@ -18,13 +18,17 @@
 
 #include "C:\Project_iot\SmartLendPegBoard\hw\db.hpp"
 #include "C:\Project_iot\SmartLendPegBoard\hw\rfid.hpp"
-#include "C:\Project_iot\SmartLendPegBoard\hw\screen.hpp"
+//#include "C:\Project_iot\SmartLendPegBoard\hw\screen.hpp"
 #include "C:\Project_iot\SmartLendPegBoard\hw\time.hpp"
+#include "C:\Project_iot\SmartLendPegBoard\hw\kp.hpp"
+
 
 
 db _DB;
 rfid _rfd;
 screen _SC;
+kp _KP(_SC);
+
 
 unsigned long sendDataPrevMillis = 0;
 int count = 0;
@@ -33,14 +37,18 @@ bool signupOK = false;
 void setup(){
   _DB.connectToWifi("ICST", "arduino123");
   _rfd.init();
-  _SC.init();
+   _SC.init();
+   _SC.clear();
 
+  Serial.begin(9600);
 
 
 
 }
 
 void loop(){
+  Serial.println("ENTERED LOOP :), your code doesn't work losers.");
+  Serial.println("put your card please.");
   string cid = _rfd.readCid();
   Serial.println(cid.c_str());
   if(cid != "error"){
@@ -53,5 +61,6 @@ void loop(){
       
     }
   }
+  Serial.println(_KP.getUserId().c_str());
 
 }

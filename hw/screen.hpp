@@ -13,6 +13,8 @@ class  screen{
  void init();
  void enterId();
  void clear();
+ void printKey(char key);
+
 
 };
 
@@ -29,15 +31,25 @@ void screen::init(){
 }
 
 void screen::enterId(){
-  display.setTextSize(2);
+  display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 10); 
      // Display static text
-  display.println("Enter your ID please :)");
+  display.println("Enter your ID please :) \n");
   display.display();
 }
 
 void screen::clear(){
   display.clearDisplay();
+}
+
+void screen::printKey(char key){
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 10); 
+     // Display static text
+  display.setCursor(0, 10); 
+  display.println(key);
+  display.display();
 }
 
