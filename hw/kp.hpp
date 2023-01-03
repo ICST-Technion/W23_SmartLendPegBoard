@@ -58,5 +58,9 @@ string kp::getUserId()
         }
 
     }
+
+    sc.clear();
+    Serial.println(output.c_str());
+    sc.printId(output);
     return output;
 }

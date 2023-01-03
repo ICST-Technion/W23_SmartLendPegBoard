@@ -24,12 +24,20 @@ MFRC522::MIFARE_Key key;
 //authentication return status code
 MFRC522::StatusCode status;
 // Defined pins to module RC522
-#define SS_PIN    21
-#define RST_PIN   22
-#define SIZE_BUFFER     18
-#define MAX_SIZE_BLOCK  16
-#define greenPin     12
-#define redPin       32
+// #define SS_PIN    21
+// #define RST_PIN   22
+// #define SIZE_BUFFER     18
+// #define MAX_SIZE_BLOCK  16
+// #define greenPin     12
+// #define redPin       32
+
+#define SS_PIN  5 // SCK-GPIO 18, MOSI-GPIO 17, MISO-GPIO 16, Vcc-3.3v, GND -GND,
+#define RST_PIN 4
+// Declaration for SSD1306 display connected using software I2C pins are(22 SCL, 21 SDA)
+// #define SCREEN_WIDTH 128 // OLED display width, in pixels
+// #define SCREEN_HEIGHT 64 // OLED display height, in pixels
+//Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
 
 using std::string;
 
@@ -62,17 +70,20 @@ void rfid::init(){
 
 string rfid::readCid(){
   if ( ! mfrc522.PICC_IsNewCardPresent()) {
+    Serial.println("there's no card present \n");
 		return "error";
 	}
 
 	// Select one of the cards
 	if ( ! mfrc522.PICC_ReadCardSerial()) {
+    Serial.println("can't read card! \n");
 		return "error";
 	}
 
   String userid;
   for (uint8_t i=0; i < 4; i++)
   {
+    Serial.println("iteration\n");
     userid += "0x" + String(mfrc522.uid.uidByte[i], HEX) + " "; 
   }
   //string uid(userid);

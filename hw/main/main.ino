@@ -37,8 +37,8 @@ bool signupOK = false;
 void setup(){
   _DB.connectToWifi("ICST", "arduino123");
   _rfd.init();
-   _SC.init();
-   _SC.clear();
+  _SC.init();
+  _SC.clear();
 
   Serial.begin(9600);
 
@@ -47,20 +47,29 @@ void setup(){
 }
 
 void loop(){
-  Serial.println("ENTERED LOOP :), your code doesn't work losers.");
-  Serial.println("put your card please.");
-  string cid = _rfd.readCid();
-  Serial.println(cid.c_str());
-  if(cid != "error"){
-    if(_DB.isNewUser(cid)){
-      _DB.addNewUser(cid, 2121);
-      Serial.println("added new user \n");
-    }else{
-      Serial.println("user already exists.\n");
-      _SC.enterId();
-      
+  while(1){
+    //Serial.println("ENTERED LOOP :), your code doesn't work losers.");
+    _SC.printStr(string("put your card on the reader please."));
+    string cid = "error";
+    while(cid == "error"){
+      cid = _rfd.readCid();
+    }
+    _SC.clear();
+    Serial.println(cid.c_str());
+    if(cid != "error"){
+      if(_DB.isNewUser(cid)){
+        _SC.enterId();
+        string uid = _KP.getUserId();  
+        Serial.println(uid.c_str());
+        _DB.addNewUser(cid, stoi(uid));
+        Serial.println("added new user \n");
+        delay(5000);
+        _SC.clear();
+
+      }
+      // else{
+        
+      // }
     }
   }
-  Serial.println(_KP.getUserId().c_str());
-
 }
