@@ -30,6 +30,7 @@ void sensor::init(int endstop_1, int endstop_2) {
     delay(1);
     bS=digitalRead(this->endstop_1);    
     digitalWrite(endstop_2, LOW);
+    delay(500);
   }else {
     bS=digitalRead(this->endstop_1);
   }
