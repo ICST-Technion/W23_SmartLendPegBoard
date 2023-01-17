@@ -21,6 +21,7 @@
 //#include "C:\Project_iot\SmartLendPegBoard\hw\screen.hpp"
 #include "C:\Project_iot\SmartLendPegBoard\hw\time.hpp"
 #include "C:\Project_iot\SmartLendPegBoard\hw\kp.hpp"
+#include "C:\Project_iot\SmartLendPegBoard\hw\sensor.hpp"
 
 
 
@@ -28,6 +29,7 @@ db _DB;
 rfid _rfd;
 screen _SC;
 kp _KP(_SC);
+sensor _sensor;
 
 
 unsigned long sendDataPrevMillis = 0;
@@ -39,6 +41,7 @@ void setup(){
   _rfd.init();
   _SC.init();
   _SC.clear();
+  _sensor.init(25,5);
 
   Serial.begin(9600);
 
