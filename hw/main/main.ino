@@ -16,20 +16,19 @@
 #define WIFI_SSID "TechPublic"
 #define WIFI_PASSWORD ""
 
-#include "C:\Project_iot\SmartLendPegBoard\hw\db.hpp"
-#include "C:\Project_iot\SmartLendPegBoard\hw\rfid.hpp"
-//#include "C:\Project_iot\SmartLendPegBoard\hw\screen.hpp"
-#include "C:\Project_iot\SmartLendPegBoard\hw\time.hpp"
-#include "C:\Project_iot\SmartLendPegBoard\hw\kp.hpp"
-#include "C:\Project_iot\SmartLendPegBoard\hw\sensor.hpp"
-
+ #include ".\ref\db.hpp"
+ #include ".\ref\rfid.hpp"
+//#include ".\screen.hpp"
+//#include "C:\Project_iot\SmartLendPegBoardhw\time.hpp"
+ #include ".\ref\kp.hpp"
+// #include "C:\Project_iot\SmartLendPegBoard\hw\sensor.hpp"
 
 
 db _DB;
 rfid _rfd;
 screen _SC;
 kp _KP(_SC);
-sensor _sensor;
+//sensor _sensor;
 
 
 unsigned long sendDataPrevMillis = 0;
@@ -37,11 +36,11 @@ int count = 0;
 bool signupOK = false;
 
 void setup(){
-  _DB.connectToWifi("ICST", "arduino123");
+  //_DB.connectToWifi("ICST", "arduino123");
   _rfd.init();
   _SC.init();
   _SC.clear();
-  _sensor.init(25,5);
+ // _sensor.init(25,5);
 
   Serial.begin(9600);
 
@@ -50,29 +49,32 @@ void setup(){
 }
 
 void loop(){
-  while(1){
     //Serial.println("ENTERED LOOP :), your code doesn't work losers.");
     _SC.printStr(string("put your card on the reader please."));
     string cid = "error";
     while(cid == "error"){
+      Serial.print("Reading card id from RFID");
       cid = _rfd.readCid();
     }
     _SC.clear();
     Serial.println(cid.c_str());
     if(cid != "error"){
-      if(_DB.isNewUser(cid)){
+     // if(_DB.isNewUser(cid)){
         _SC.enterId();
         string uid = _KP.getUserId();  
         Serial.println(uid.c_str());
-        _DB.addNewUser(cid, stoi(uid));
+        //_DB.addNewUser(cid, stoi(uid));
         Serial.println("added new user \n");
-        delay(5000);
+        delay(1000);
         _SC.clear();
 
-      }
+ //     }
       // else{
-        
+      Serial.println("USER ALREADY IN THE SYSTEM");
+      _rfd.init();
+       delay(1000);
+
       // }
     }
-  }
+  delay(5);
 }

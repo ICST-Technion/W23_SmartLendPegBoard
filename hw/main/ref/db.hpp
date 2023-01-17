@@ -15,7 +15,6 @@
 //Provide the token generation process info.
 #include "addons/TokenHelper.h"
 //Provide the RTDB payload printing info and other helper functions.
-#include "addons/RTDBHelper.h"
 
 // Insert Firebase project API Key
 #define API_KEY "AIzaSyBZVl5UmOnKJhjq-sCDZ9Vv70ZvF6dZ39c"

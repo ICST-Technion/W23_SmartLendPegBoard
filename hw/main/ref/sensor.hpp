@@ -1,5 +1,4 @@
 // Endstop
-#include <Arduino.h>
 class sensor {
   public :
   int endstop_1 = 25;// input green wire

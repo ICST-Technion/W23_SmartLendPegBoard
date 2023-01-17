@@ -13,9 +13,7 @@
 
 
 //Provide the token generation process info.
-#include "addons/TokenHelper.h"
 //Provide the RTDB payload printing info and other helper functions.
-#include "addons/RTDBHelper.h"
 
 #include <MFRC522.h> //library responsible for communicating with the module RFID-RC522
 //#include <SPI.h> //library responsible for communicating of SPI bus
