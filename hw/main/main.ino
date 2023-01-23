@@ -18,7 +18,7 @@
 
  #include ".\ref\db.hpp"
  #include ".\ref\rfid.hpp"
-//#include ".\screen.hpp"
+ #include ".\ref\screen.hpp"
 //#include "C:\Project_iot\SmartLendPegBoardhw\time.hpp"
  #include ".\ref\kp.hpp"
 // #include "C:\Project_iot\SmartLendPegBoard\hw\sensor.hpp"
@@ -36,13 +36,18 @@ int count = 0;
 bool signupOK = false;
 
 void setup(){
+   SPI.begin(); 
   //_DB.connectToWifi("ICST", "arduino123");
   _rfd.init();
   _SC.init();
   _SC.clear();
  // _sensor.init(25,5);
+  Wire.begin();
+  Wire.setClock(400000);
+ _KP.init();
 
   Serial.begin(9600);
+  
 
 
 
@@ -50,23 +55,25 @@ void setup(){
 
 void loop(){
     //Serial.println("ENTERED LOOP :), your code doesn't work losers.");
-    _SC.printStr(string("put your card on the reader please."));
+   // _SC.printStr(string("put your card on the reader please."));
+    string uid = _KP.getUserId();  
+
     string cid = "error";
     while(cid == "error"){
       Serial.print("Reading card id from RFID");
       cid = _rfd.readCid();
     }
-    _SC.clear();
+   // _SC.clear();
     Serial.println(cid.c_str());
     if(cid != "error"){
      // if(_DB.isNewUser(cid)){
-        _SC.enterId();
+        //_SC.enterId();
         string uid = _KP.getUserId();  
         Serial.println(uid.c_str());
         //_DB.addNewUser(cid, stoi(uid));
         Serial.println("added new user \n");
         delay(1000);
-        _SC.clear();
+        //_SC.clear();
 
  //     }
       // else{

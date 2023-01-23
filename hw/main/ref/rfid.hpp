@@ -56,7 +56,7 @@ class rfid{
 void rfid::init(){
   ///////////// RFID setup //////////////////////////
   Serial.begin(9600);
-  SPI.begin(); // Init SPI bus
+  //SPI.begin(); // Init SPI bus
   //pinMode(greenPin, OUTPUT);
   //pinMode(redPin, OUTPUT);
   
