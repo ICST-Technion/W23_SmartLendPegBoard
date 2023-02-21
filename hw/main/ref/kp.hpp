@@ -3,7 +3,7 @@
 #include "I2CKeyPad.h"
 
 const uint8_t KEYPAD_ADDRESS = 0x20;
-const char keys[19] = "12344568789BC0E NF";  // N = NoKey, F = Fail
+const char keys[19] = "123449630852C741NF";  // N = NoKey, F = Fail
 I2CKeyPad keyPad(KEYPAD_ADDRESS);
 
  class kp {
@@ -60,28 +60,21 @@ uint32_t lastKeyPressed = 0;
     volatile bool keyChange = false;
 
     while(counter<9){
-        if (now - lastKeyPressed >= 100)
-        {
-            lastKeyPressed = now;
-
-            start = micros();
-            uint8_t index = keyPad.getKey();
+        now = millis();
+        lastKeyPressed = now;
+        start = micros();
+        uint8_t index = keyPad.getKey();
+        stop = micros();
+        // Serial.println(stop - start);
+        if(keys[index] != 'N'){
+            counter++;
             output+=keys[index];
-
-            stop = micros();
-
-            Serial.print(millis());
-            Serial.print("\t");
-            Serial.print(index);
-            Serial.print("\t");
             Serial.print(keys[index]);
-            Serial.print("\t");
-            Serial.println(stop - start);
-            if(keys[index] != 'N')counter++;
-            Serial.print("STUCK\n");
-            now = millis();
+            Serial.print("\n");
+            delay(250);
         }
-
     }
+    sc.printId(output);
+    delay(5000);
     return output;
 }
