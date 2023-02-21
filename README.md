@@ -14,3 +14,5 @@ __main features:__
 
 
 ![poster](assets/IOT_Poster.png)
+
+The project was made for the __236333 Internet Of Things__ Course at the [Technion Website](https://www.technion.ac.il/)
