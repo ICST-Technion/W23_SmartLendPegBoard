@@ -9,6 +9,9 @@
   https://github.com/mobizt/Firebase-ESP-Client/blob/main/examples/RTDB/Basic/Basic.ino
 */
 
+#include <vector>
+
+
 
 
 
@@ -22,13 +25,16 @@
 //#include "C:\Project_iot\SmartLendPegBoardhw\time.hpp"
  #include ".\ref\kp.hpp"
 // #include "C:\Project_iot\SmartLendPegBoard\hw\sensor.hpp"
+#include ".\ref\sensor.hpp"
+Adafruit_PCF8574 pcf;
+Adafruit_PCF8574 pcf2;
 
-
+std::vector<sensor*> sensors;
+std::vector<int> last(6); // initalize a vector of size 6
 db _DB;
 rfid _rfd;
 screen _SC;
 kp _KP(_SC);
-//sensor _sensor;
 
 
 unsigned long sendDataPrevMillis = 0;
@@ -37,51 +43,90 @@ bool signupOK = false;
 
 void setup(){
    SPI.begin(); 
-  //_DB.connectToWifi("ICST", "arduino123");
+  _DB.connectToWifi("Teba", "12345678");
   _rfd.init();
   _SC.init();
   _SC.clear();
- // _sensor.init(25,5);
   Wire.begin();
   Wire.setClock(400000);
  _KP.init();
 
   Serial.begin(9600);
-  
+    if (!pcf.begin(0x27, &Wire)) {
+    Serial.println("Couldn't find PCF8574");
+    while (1);
+  }
+
+      if (!pcf2.begin(0x21, &Wire)) {
+    Serial.println("Couldn't find PCF8574");
+    while (1);
+  }
 
 
+  for(int i=0;i<3;i++){
+     sensors.push_back(new sensor());
+    sensors[i]->init(i*2,i*2+1,&pcf);
+  }
+  for(int i=0;i<3;i++){
+    sensors.push_back( new sensor());
+    sensors[i+3]->init(i*2,i*2+1,&pcf2);
+  }
+  // get the current taste
+  for(int i=0;i<6;i++){  
+    last[i]=sensors[i]->status();
+  }
 
 }
 
 void loop(){
-    //Serial.println("ENTERED LOOP :), your code doesn't work losers.");
-   // _SC.printStr(string("put your card on the reader please."));
-    string uid = _KP.getUserId();  
-
+    _SC.printStr(string("put your card on the reader please."));  
     string cid = "error";
     while(cid == "error"){
-      Serial.print("Reading card id from RFID");
+      //Serial.print("Reading card id from RFID");
       cid = _rfd.readCid();
     }
-   // _SC.clear();
+    _SC.clear();
     Serial.println(cid.c_str());
-    if(cid != "error"){
-     // if(_DB.isNewUser(cid)){
-        //_SC.enterId();
-        string uid = _KP.getUserId();  
+    if(_DB.isNewUser(cid)){
+        _SC.enterId();
+        string uid = _KP.getUserId(); //TODO: add prints on the screen
         Serial.println(uid.c_str());
-        //_DB.addNewUser(cid, stoi(uid));
+        _DB.addNewUser(cid, stoi(uid));
         Serial.println("added new user \n");
-        delay(1000);
-        //_SC.clear();
-
- //     }
-      // else{
-      Serial.println("USER ALREADY IN THE SYSTEM");
-      _rfd.init();
-       delay(1000);
-
-      // }
+    }else{
+      if(!_DB.isUserApproved(cid)){
+      _SC.printStr(string("You don't have a permission, enter your id please."));
+      delay(6000);
+      string uid = _KP.getUserId();
+      _DB.addNewUser(cid, stoi(uid));
+      return;  
+      }
     }
-  delay(5);
+    _SC.printStr(string("Access granted."));  
+    std::vector<bool> v=_DB.getUserLentItems(cid);
+    for(int i=0;i<6;i++){
+      if(v[i]==true)sensors[i]->ledOn();
+      else sensors[i]->ledOf();
+    }
+    _SC.clear();
+    delay(100);
+    
+   delay(30000); //Waiting for the user to finish.
+  //these operatioons are done after the locker is closed
+  for(int i=0;i<6;i++){     
+    if(sensors[i]->status()!=last[i]){
+      //item i has been taken or returned :
+      Serial.println("items state has changed");
+      if(last[i]==0){
+        //item has been taken
+        last[i]=1;
+       _DB.lendItem(cid, i);
+      }else{
+        //item has been returned 
+        last[i]=0;
+        _DB.returnItem(cid, i);
+      }
+    }
+  }  
+  delay(1000);
 }

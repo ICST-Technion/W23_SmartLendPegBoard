@@ -43,6 +43,7 @@ void screen::enterId(){
 
 void screen::clear(){
   display.clearDisplay();
+  delay(10);
 }
 
 void screen::printKey(char key){
@@ -56,6 +57,7 @@ void screen::printKey(char key){
 }
 
 void screen::printId(string id){
+  clear();
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 10); 
@@ -66,6 +68,7 @@ void screen::printId(string id){
 }
 
 void screen::printStr(string str){
+  clear();
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 10); 

@@ -68,7 +68,7 @@ void rfid::init(){
 
 string rfid::readCid(){
   if ( ! mfrc522.PICC_IsNewCardPresent()) {
-    Serial.println("there's no card present \n");
+    //Serial.println("there's no card present \n");
 		return "error";
 	}
 
@@ -88,6 +88,8 @@ string rfid::readCid(){
   Serial.print("User ID: ");
   Serial.println(userid);
   string temp(userid.c_str());
+  //mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
+ // temp=mfrc522.uid;
   return temp;
   //return userid;
 }
