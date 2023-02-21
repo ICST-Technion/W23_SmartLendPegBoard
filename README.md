@@ -13,6 +13,7 @@ __main features:__
 - There is no need for check-in checkout process.
 
 
-![poster](assets/IOT_Poster.png)
 
-The project was made for the __236333 Internet Of Things__ Course at the [Technion Website](https://www.technion.ac.il/)
+<img src="assets/IOT_Poster.png" width="474.75" height="687">
+
+The project was made for the __236333 Internet Of Things__ Course at the [Technion Institue Of Technology](https://www.technion.ac.il/)
