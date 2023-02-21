@@ -12,3 +12,5 @@ __main features:__
 - The tracking will be transparent to the user, without locking any tool in the cell.
 - There is no need for check-in checkout process.
 
+
+![poster](assets/IOT_Poster.png)
